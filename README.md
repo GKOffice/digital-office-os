@@ -1,23 +1,41 @@
-# Digital Office OS - Day-1 Scaffold
+# Digital Office OS
 
-A fully visual, navigable, monitored, governed Digital Office Platform.
+Sovereign Digital Revenue Empire - Command Center Platform
+
+## Prerequisites
+
+- Node.js 20+
+- PostgreSQL 15+
+- Redis 7+ (optional, for job queues)
 
 ## Quick Start
 
-### 1. Backend Setup
+### 1. Database Setup
+
+Create a PostgreSQL database:
+```sql
+CREATE DATABASE digital_office;
+```
+
+### 2. Backend Setup
 
 ```bash
 cd backend
 
-# Copy environment file
-cp .env.example .env
-# Edit .env with your database credentials
-
 # Install dependencies
 npm install
 
-# Run migrations (creates tables + default user)
+# Configure environment
+cp .env.example .env
+# Edit .env with your database URL:
+# DATABASE_URL=postgresql://user:password@localhost:5432/digital_office
+# JWT_SECRET=your-secret-key-change-this
+
+# Run migrations (creates all tables)
 npm run db:migrate
+
+# Seed sample data (optional but recommended)
+npm run db:seed
 
 # Start server
 npm run dev
@@ -25,7 +43,7 @@ npm run dev
 
 Server runs at `http://localhost:4000`
 
-### 2. Frontend Setup
+### 3. Frontend Setup
 
 ```bash
 cd frontend
@@ -33,105 +51,173 @@ cd frontend
 # Install dependencies
 npm install
 
+# Configure environment
+cp .env.example .env
+# Default is fine for local dev
+
 # Start development server
 npm run dev
 ```
 
 App runs at `http://localhost:3000`
 
-### 3. Default Login
+### 4. Login
 
 - **Email:** admin@empire.io
 - **Password:** admin123
 
-## What's Included
+---
 
-### Backend (`/backend`)
-- ✅ Express.js API server
-- ✅ PostgreSQL connection + full schema
-- ✅ JWT authentication
-- ✅ WebSocket real-time updates
-- ✅ Activity logging
-- ✅ All API routes:
-  - `/api/v1/auth` - Login, register, current user
-  - `/api/v1/portfolio` - Portfolio summary
-  - `/api/v1/creators` - Creator CRUD + autonomy
-  - `/api/v1/agents` - Agent details + autonomy
-  - `/api/v1/tasks` - Task management
-  - `/api/v1/activity` - Activity log + digest
-  - `/api/v1/approvals` - Approval workflow
-
-### Frontend (`/frontend`)
-- ✅ Next.js 14 App Router
-- ✅ Tailwind CSS styling
-- ✅ Authentication context
-- ✅ Sidebar navigation with creator tree
-- ✅ All screen shells:
-  - Command Center (home)
-  - Portfolio view
-  - Creator Dashboard
-  - Agent Workspace
-  - Execution Console
-  - Activity Log
-  - War Room
-  - File System
-  - Settings
-
-### Interactive Prototype (`/prototype`)
-- ✅ Single HTML file
-- ✅ Clickable navigation
-- ✅ All major screens
-- ✅ No dependencies needed
-- Just open `prototype/index.html` in browser
-
-## Architecture
+## Project Structure
 
 ```
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│   Frontend   │────▶│   Backend    │────▶│  PostgreSQL  │
-│  (Next.js)   │     │  (Express)   │     │              │
-└──────────────┘     └──────────────┘     └──────────────┘
-       │                    │
-       │                    ▼
-       │             ┌──────────────┐
-       └────────────▶│    Redis     │
-         WebSocket   │   (Queue)    │
-                     └──────────────┘
+digital-office-os/
+├── backend/
+│   ├── src/
+│   │   ├── db/
+│   │   │   ├── index.js      # Database connection
+│   │   │   ├── migrate.js    # Schema migration
+│   │   │   └── seed.js       # Sample data
+│   │   ├── routes/
+│   │   │   ├── auth.js       # Authentication
+│   │   │   ├── portfolio.js  # Portfolio endpoints
+│   │   │   ├── creators.js   # Creator CRUD
+│   │   │   ├── agents.js     # Agent endpoints
+│   │   │   ├── tasks.js      # Task management
+│   │   │   ├── activity.js   # Activity log
+│   │   │   └── approvals.js  # Approval workflow
+│   │   ├── middleware/
+│   │   │   └── auth.js       # JWT validation
+│   │   ├── websocket/
+│   │   │   └── index.js      # Real-time events
+│   │   ├── utils/
+│   │   │   └── logger.js     # Logging
+│   │   └── index.js          # Server entry
+│   ├── .env.example
+│   └── package.json
+├── frontend/
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── (dashboard)/  # Protected routes
+│   │   │   │   ├── page.tsx           # Command Center
+│   │   │   │   ├── portfolio/         # Portfolio view
+│   │   │   │   ├── creators/[id]/     # Creator dashboard
+│   │   │   │   ├── agents/[id]/       # Agent workspace
+│   │   │   │   ├── execution/         # Execution console
+│   │   │   │   ├── activity/          # Activity log
+│   │   │   │   ├── war-room/          # War room
+│   │   │   │   ├── files/             # File system
+│   │   │   │   └── settings/          # Settings
+│   │   │   ├── login/        # Login page
+│   │   │   └── layout.tsx    # Root layout
+│   │   ├── components/
+│   │   │   └── Sidebar.tsx   # Navigation sidebar
+│   │   └── lib/
+│   │       ├── api.ts        # API client
+│   │       └── auth-context.tsx  # Auth state
+│   ├── .env.example
+│   └── package.json
+├── prototype/
+│   └── index.html            # Interactive HTML mockup
+├── docs/
+│   └── API-EXAMPLES.md       # curl examples
+└── README.md
 ```
-
-## Database Schema
-
-Core tables:
-- `users` - Authentication
-- `portfolios` - Top-level container
-- `creators` - Creator pods
-- `agents` - 15 agents per creator
-- `tasks` - Agent task queue
-- `decisions` - Decision records
-- `approvals` - Approval workflow
-- `activity_log` - Full audit trail
-- `metrics_daily` - KPI time series
-- `owner_actions` - Owner tracking
-
-## Next Steps
-
-1. Set up PostgreSQL database
-2. Configure `.env` files
-3. Run migrations
-4. Start backend and frontend
-5. Log in and explore
-
-## Build Specifications
-
-Full documentation in `/empire-blueprint/BUILD/`:
-- 01-NAVIGATION-MAP.md
-- 02-UI-WIREFRAMES.md
-- 03-DATA-MODEL.md
-- 04-RUNTIME-ARCHITECTURE.md
-- 05-MONITORING-DESIGN.md
-- 06-EXECUTION-FLOW.md
-- 07-BUILD-ROADMAP.md
 
 ---
 
-**Status:** Day-1 scaffold ready for development team.
+## Database Schema
+
+Migration creates these tables:
+
+| Table | Purpose |
+|-------|---------|
+| `users` | Authentication |
+| `portfolios` | Top-level container |
+| `creators` | Creator pods with settings |
+| `agents` | 10+ agents per creator |
+| `tasks` | Agent task queue |
+| `decisions` | Decision records |
+| `approvals` | Approval workflow |
+| `activity_log` | Full audit trail |
+| `metrics_daily` | KPI time series |
+| `owner_actions` | Owner tracking |
+| `sessions` | Token sessions |
+
+---
+
+## API Documentation
+
+See `docs/API-EXAMPLES.md` for complete curl examples.
+
+Quick test after setup:
+```bash
+# Login
+curl -X POST http://localhost:4000/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "admin@empire.io", "password": "admin123"}'
+
+# Use returned token for other requests
+curl http://localhost:4000/api/v1/portfolio \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+---
+
+## What's Implemented
+
+| Component | Status |
+|-----------|--------|
+| PostgreSQL schema | ✅ Real |
+| Database migrations | ✅ Real |
+| JWT authentication | ✅ Real |
+| API routes (CRUD) | ✅ Real |
+| Activity log persistence | ✅ Real |
+| Frontend navigation | ✅ Real |
+| Protected routes | ✅ Real |
+| WebSocket server | ✅ Setup done |
+
+## What's Stubbed/Mock
+
+| Component | Status |
+|-----------|--------|
+| KPI calculations | Mock (hardcoded) |
+| External APIs (Meta, Google, Stripe) | Not implemented |
+| Decision rule engine | Not implemented |
+| Background job processing | Not implemented |
+| Rollback execution | Not implemented |
+| Real-time event broadcasting | Partial |
+
+---
+
+## Interactive Prototype
+
+Open `prototype/index.html` in any browser for a clickable mockup - no server needed.
+
+---
+
+## Development
+
+```bash
+# Backend (with auto-reload)
+cd backend && npm run dev
+
+# Frontend (with hot reload)
+cd frontend && npm run dev
+```
+
+## Production Build
+
+```bash
+# Frontend
+cd frontend && npm run build && npm start
+
+# Backend
+cd backend && npm start
+```
+
+---
+
+## License
+
+Private - All rights reserved.
