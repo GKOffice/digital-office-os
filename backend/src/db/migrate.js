@@ -213,26 +213,14 @@ CREATE INDEX IF NOT EXISTS idx_metrics_creator_date ON metrics_daily(creator_id,
 
 async function migrate() {
   const pool = new Pool({
-    connectionString: process.env.DATABASE_URL
+    connectionString: process.env.DATABASE_URL,
+    ssl: process.env.DATABASE_URL?.includes('neon.tech') ? { rejectUnauthorized: false } : false
   });
   
   try {
     console.log('Running migrations...');
     await pool.query(schema);
-    console.log('Migrations complete');
-    
-    // Create default user if not exists
-    const userCheck = await pool.query("SELECT id FROM users WHERE email = 'admin@empire.io'");
-    if (userCheck.rows.length === 0) {
-      // Password: admin123 (change in production!)
-      const hash = '$2a$10$rQEY8vhz5K5L5J5L5J5L5O5L5J5L5J5L5J5L5J5L5J5L5J5L5J5L5';
-      await pool.query(`
-        INSERT INTO users (email, password_hash, name, role)
-        VALUES ('admin@empire.io', $1, 'Admin', 'owner')
-      `, [hash]);
-      console.log('Default admin user created');
-    }
-    
+    console.log('✅ Migrations complete');
   } catch (err) {
     console.error('Migration failed:', err);
     process.exit(1);
