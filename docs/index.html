@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Office OS - Interactive Prototype</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            empire: { 500: '#8b5cf6', 600: '#7c3aed' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .sidebar-item:hover { background: rgba(139, 92, 246, 0.1); }
+    .sidebar-item.active { background: rgba(139, 92, 246, 0.2); border-left: 3px solid #8b5cf6; }
+    .card { background: #18181b; border: 1px solid #27272a; }
+    .metric-card { transition: transform 0.2s; }
+    .metric-card:hover { transform: translateY(-2px); }
+  </style>
+</head>
+<body class="dark bg-zinc-950 text-zinc-100 min-h-screen">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-zinc-900 border-r border-zinc-800 flex flex-col">
+      <div class="p-4 border-b border-zinc-800">
+        <h1 class="text-xl font-bold text-empire-500">⚡ Empire HQ</h1>
+        <p class="text-xs text-zinc-500">Digital Office OS</p>
+      </div>
+      
+      <nav class="flex-1 p-2 overflow-y-auto">
+        <div class="space-y-1">
+          <a href="#" data-page="command" class="sidebar-item active flex items-center gap-3 px-3 py-2 rounded text-sm">
+            <span>📊</span> Command Center
+          </a>
+          <a href="#" data-page="portfolio" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded text-sm">
+            <span>💼</span> Portfolio
+          </a>
+          <a href="#" data-page="warroom" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded text-sm">
+            <span>🚨</span> War Room
+            <span class="ml-auto bg-red-600 text-xs px-1.5 py-0.5 rounded-full">2</span>
+          </a>
+          <a href="#" data-page="execution" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded text-sm">
+            <span>⚡</span> Execution
+          </a>
+          <a href="#" data-page="activity" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded text-sm">
+            <span>📋</span> Activity Log
+          </a>
+          
+          <!-- Creators Section -->
+          <div class="mt-4 mb-2">
+            <div class="px-3 py-1 text-xs font-semibold text-zinc-500 uppercase tracking-wider">Creators</div>
+          </div>
+          
+          <div class="creator-tree">
+            <a href="#" data-page="creator-alex" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded text-sm">
+              <span class="w-2 h-2 rounded-full bg-green-500"></span>
+              <span>Alex Digital</span>
+              <span class="ml-auto text-xs text-yellow-500">S</span>
+            </a>
+            <div class="ml-6 space-y-1 hidden" id="alex-agents">
+              <a href="#" data-page="agent-content" class="sidebar-item flex items-center gap-2 px-3 py-1.5 rounded text-xs text-zinc-400">
+                <span>📝</span> Content Agent
+              </a>
+              <a href="#" data-page="agent-growth" class="sidebar-item flex items-center gap-2 px-3 py-1.5 rounded text-xs text-zinc-400">
+                <span>📈</span> Growth Agent
+              </a>
+              <a href="#" data-page="agent-revenue" class="sidebar-item flex items-center gap-2 px-3 py-1.5 rounded text-xs text-zinc-400">
+                <span>💰</span> Revenue Agent
+              </a>
+            </div>
+            
+            <a href="#" data-page="creator-sarah" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded text-sm">
+              <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+              <span>Sarah Growth</span>
+              <span class="ml-auto text-xs text-blue-500">A</span>
+            </a>
+            
+            <a href="#" data-page="creator-mike" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded text-sm">
+              <span class="w-2 h-2 rounded-full bg-green-500"></span>
+              <span>Mike Content</span>
+              <span class="ml-auto text-xs text-zinc-500">B</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+      
+      <div class="p-4 border-t border-zinc-800">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-full bg-empire-600 flex items-center justify-center text-sm">A</div>
+          <div>
+            <div class="text-sm font-medium">Admin</div>
+            <div class="text-xs text-zinc-500">Owner</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="flex-1 overflow-auto">
+      <!-- Command Center -->
+      <div id="page-command" class="page p-6 space-y-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-2xl font-bold">Command Center</h2>
+            <p class="text-zinc-500">Portfolio overview and alerts</p>
+          </div>
+          <div class="flex gap-2">
+            <span class="px-3 py-1 bg-green-900/30 text-green-400 rounded text-sm">System Online</span>
+            <span class="px-3 py-1 bg-zinc-800 rounded text-sm">Last sync: 2 min ago</span>
+          </div>
+        </div>
+        
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-4 gap-4">
+          <div class="card metric-card p-4 rounded-lg">
+            <div class="text-zinc-500 text-sm">Monthly Revenue</div>
+            <div class="text-2xl font-bold text-green-400">$847,230</div>
+            <div class="text-xs text-green-500">↑ 12.3% vs last month</div>
+          </div>
+          <div class="card metric-card p-4 rounded-lg">
+            <div class="text-zinc-500 text-sm">Active Creators</div>
+            <div class="text-2xl font-bold">3</div>
+            <div class="text-xs text-zinc-500">S:1 A:1 B:1</div>
+          </div>
+          <div class="card metric-card p-4 rounded-lg">
+            <div class="text-zinc-500 text-sm">Pending Approvals</div>
+            <div class="text-2xl font-bold text-yellow-400">7</div>
+            <div class="text-xs text-red-400">2 critical</div>
+          </div>
+          <div class="card metric-card p-4 rounded-lg">
+            <div class="text-zinc-500 text-sm">Portfolio ROAS</div>
+            <div class="text-2xl font-bold">3.2x</div>
+            <div class="text-xs text-green-500">↑ 0.3 vs target</div>
+          </div>
+        </div>
+        
+        <!-- Alerts Panel -->
+        <div class="card rounded-lg p-4">
+          <h3 class="font-semibold mb-4 flex items-center gap-2">
+            <span>🚨</span> Active Alerts
+          </h3>
+          <div class="space-y-2">
+            <div class="flex items-center gap-3 p-3 bg-red-900/20 border border-red-800/50 rounded">
+              <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+              <span class="text-sm">Alex Digital: ROAS dropped below threshold (2.1 → 1.8)</span>
+              <span class="ml-auto text-xs text-zinc-500">5 min ago</span>
+              <button class="px-2 py-1 bg-red-600 hover:bg-red-500 rounded text-xs">Review</button>
+            </div>
+            <div class="flex items-center gap-3 p-3 bg-yellow-900/20 border border-yellow-800/50 rounded">
+              <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+              <span class="text-sm">Sarah Growth: Ad spend exceeds daily limit by 15%</span>
+              <span class="ml-auto text-xs text-zinc-500">23 min ago</span>
+              <button class="px-2 py-1 bg-yellow-600 hover:bg-yellow-500 rounded text-xs">Review</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Recent Activity -->
+        <div class="card rounded-lg p-4">
+          <h3 class="font-semibold mb-4">Recent Activity</h3>
+          <div class="space-y-3">
+            <div class="flex items-start gap-3 text-sm">
+              <span class="text-empire-500">⚡</span>
+              <div>
+                <span class="text-zinc-300">Growth Agent</span>
+                <span class="text-zinc-500">scaled ad spend by 20% for Alex Digital</span>
+              </div>
+              <span class="ml-auto text-xs text-zinc-500">12:34 PM</span>
+            </div>
+            <div class="flex items-start gap-3 text-sm">
+              <span class="text-green-500">✓</span>
+              <div>
+                <span class="text-zinc-300">Content Agent</span>
+                <span class="text-zinc-500">published 3 posts for Sarah Growth</span>
+              </div>
+              <span class="ml-auto text-xs text-zinc-500">11:20 AM</span>
+            </div>
+            <div class="flex items-start gap-3 text-sm">
+              <span class="text-yellow-500">⏳</span>
+              <div>
+                <span class="text-zinc-300">Revenue Agent</span>
+                <span class="text-zinc-500">awaiting approval: price change for Mike Content</span>
+              </div>
+              <span class="ml-auto text-xs text-zinc-500">10:45 AM</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Creator Dashboard -->
+      <div id="page-creator-alex" class="page hidden p-6 space-y-6">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-empire-600 flex items-center justify-center text-xl">A</div>
+            <div>
+              <h2 class="text-2xl font-bold">Alex Digital</h2>
+              <p class="text-zinc-500">DigitalMastery • Tier S</p>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <select class="bg-zinc-800 border border-zinc-700 rounded px-3 py-1.5 text-sm">
+              <option>Autonomy: L1 (Suggest)</option>
+              <option>Autonomy: L0 (Manual)</option>
+              <option>Autonomy: L2 (Auto-Low)</option>
+              <option>Autonomy: L3 (Auto-High)</option>
+            </select>
+            <button class="px-4 py-1.5 bg-empire-600 hover:bg-empire-500 rounded text-sm">Settings</button>
+          </div>
+        </div>
+        
+        <!-- Creator KPIs -->
+        <div class="grid grid-cols-5 gap-4">
+          <div class="card p-4 rounded-lg">
+            <div class="text-zinc-500 text-xs">Revenue (30d)</div>
+            <div class="text-xl font-bold">$423,500</div>
+            <div class="text-xs text-green-500">↑ 18%</div>
+          </div>
+          <div class="card p-4 rounded-lg">
+            <div class="text-zinc-500 text-xs">Ad Spend</div>
+            <div class="text-xl font-bold">$132,000</div>
+            <div class="text-xs text-zinc-500">31% of rev</div>
+          </div>
+          <div class="card p-4 rounded-lg">
+            <div class="text-zinc-500 text-xs">ROAS</div>
+            <div class="text-xl font-bold text-yellow-400">1.8x</div>
+            <div class="text-xs text-red-500">↓ below 2.0 target</div>
+          </div>
+          <div class="card p-4 rounded-lg">
+            <div class="text-zinc-500 text-xs">Conversion Rate</div>
+            <div class="text-xl font-bold">4.2%</div>
+            <div class="text-xs text-green-500">↑ 0.3%</div>
+          </div>
+          <div class="card p-4 rounded-lg">
+            <div class="text-zinc-500 text-xs">Risk Index</div>
+            <div class="text-xl font-bold text-yellow-400">65</div>
+            <div class="text-xs text-yellow-500">Medium</div>
+          </div>
+        </div>
+        
+        <!-- Agent Status Grid -->
+        <div class="card rounded-lg p-4">
+          <h3 class="font-semibold mb-4">Agent Status</h3>
+          <div class="grid grid-cols-3 gap-4">
+            <div class="bg-zinc-800/50 p-4 rounded-lg border border-zinc-700">
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-medium">📝 Content Agent</span>
+                <span class="w-2 h-2 rounded-full bg-green-500"></span>
+              </div>
+              <div class="text-xs text-zinc-500 mb-2">12 tasks this week • 95% accuracy</div>
+              <div class="flex gap-2">
+                <span class="px-2 py-0.5 bg-zinc-700 rounded text-xs">L1</span>
+                <span class="px-2 py-0.5 bg-green-900/50 text-green-400 rounded text-xs">Active</span>
+              </div>
+            </div>
+            <div class="bg-zinc-800/50 p-4 rounded-lg border border-zinc-700">
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-medium">📈 Growth Agent</span>
+                <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+              </div>
+              <div class="text-xs text-zinc-500 mb-2">8 tasks this week • 87% accuracy</div>
+              <div class="flex gap-2">
+                <span class="px-2 py-0.5 bg-zinc-700 rounded text-xs">L2</span>
+                <span class="px-2 py-0.5 bg-yellow-900/50 text-yellow-400 rounded text-xs">Caution</span>
+              </div>
+            </div>
+            <div class="bg-zinc-800/50 p-4 rounded-lg border border-zinc-700">
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-medium">💰 Revenue Agent</span>
+                <span class="w-2 h-2 rounded-full bg-green-500"></span>
+              </div>
+              <div class="text-xs text-zinc-500 mb-2">5 tasks this week • 100% accuracy</div>
+              <div class="flex gap-2">
+                <span class="px-2 py-0.5 bg-zinc-700 rounded text-xs">L1</span>
+                <span class="px-2 py-0.5 bg-green-900/50 text-green-400 rounded text-xs">Active</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Pending Decisions -->
+        <div class="card rounded-lg p-4">
+          <h3 class="font-semibold mb-4">Pending Decisions</h3>
+          <div class="space-y-3">
+            <div class="bg-zinc-800/50 p-4 rounded-lg border border-yellow-800/50">
+              <div class="flex items-start justify-between">
+                <div>
+                  <div class="font-medium">Scale ad spend by 25%</div>
+                  <div class="text-sm text-zinc-500 mt-1">Growth Agent • Based on weekend performance spike</div>
+                  <div class="text-xs text-zinc-600 mt-2">
+                    Impact: +$33,000/day spend → projected +$82,500/day revenue
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button class="px-3 py-1.5 bg-green-600 hover:bg-green-500 rounded text-sm">Approve</button>
+                  <button class="px-3 py-1.5 bg-zinc-700 hover:bg-zinc-600 rounded text-sm">Reject</button>
+                  <button class="px-3 py-1.5 bg-zinc-700 hover:bg-zinc-600 rounded text-sm">Modify</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Agent Workspace -->
+      <div id="page-agent-content" class="page hidden p-6 space-y-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="flex items-center gap-2 text-sm text-zinc-500 mb-1">
+              <a href="#" class="hover:text-zinc-300">Alex Digital</a>
+              <span>/</span>
+              <span>Content Agent</span>
+            </div>
+            <h2 class="text-2xl font-bold">📝 Content Agent</h2>
+          </div>
+          <div class="flex gap-2">
+            <select class="bg-zinc-800 border border-zinc-700 rounded px-3 py-1.5 text-sm">
+              <option>Autonomy: L1 (Suggest)</option>
+            </select>
+            <button class="px-4 py-1.5 bg-red-600 hover:bg-red-500 rounded text-sm">Pause Agent</button>
+          </div>
+        </div>
+        
+        <!-- Agent Stats -->
+        <div class="grid grid-cols-4 gap-4">
+          <div class="card p-4 rounded-lg">
+            <div class="text-zinc-500 text-xs">Accuracy (30d)</div>
+            <div class="text-xl font-bold text-green-400">95.2%</div>
+          </div>
+          <div class="card p-4 rounded-lg">
+            <div class="text-zinc-500 text-xs">SLA Adherence</div>
+            <div class="text-xl font-bold">98.1%</div>
+          </div>
+          <div class="card p-4 rounded-lg">
+            <div class="text-zinc-500 text-xs">Tasks (7d)</div>
+            <div class="text-xl font-bold">12</div>
+          </div>
+          <div class="card p-4 rounded-lg">
+            <div class="text-zinc-500 text-xs">Rollbacks (30d)</div>
+            <div class="text-xl font-bold text-green-400">0</div>
+          </div>
+        </div>
+        
+        <!-- Task Queue -->
+        <div class="card rounded-lg p-4">
+          <h3 class="font-semibold mb-4">Task Queue</h3>
+          <table class="w-full">
+            <thead class="text-left text-sm text-zinc-500 border-b border-zinc-800">
+              <tr>
+                <th class="pb-2">Task</th>
+                <th class="pb-2">Status</th>
+                <th class="pb-2">Priority</th>
+                <th class="pb-2">Due</th>
+                <th class="pb-2"></th>
+              </tr>
+            </thead>
+            <tbody class="text-sm">
+              <tr class="border-b border-zinc-800/50">
+                <td class="py-3">Write newsletter for product launch</td>
+                <td><span class="px-2 py-0.5 bg-blue-900/50 text-blue-400 rounded text-xs">In Progress</span></td>
+                <td><span class="text-yellow-400">High</span></td>
+                <td class="text-zinc-500">Today 5PM</td>
+                <td><button class="text-empire-500 hover:text-empire-400 text-xs">View</button></td>
+              </tr>
+              <tr class="border-b border-zinc-800/50">
+                <td class="py-3">Generate 5 social posts for Q1 promo</td>
+                <td><span class="px-2 py-0.5 bg-zinc-700 text-zinc-300 rounded text-xs">Pending</span></td>
+                <td><span class="text-zinc-400">Normal</span></td>
+                <td class="text-zinc-500">Tomorrow</td>
+                <td><button class="text-empire-500 hover:text-empire-400 text-xs">View</button></td>
+              </tr>
+              <tr>
+                <td class="py-3">Update email sequences for new funnel</td>
+                <td><span class="px-2 py-0.5 bg-zinc-700 text-zinc-300 rounded text-xs">Pending</span></td>
+                <td><span class="text-zinc-400">Normal</span></td>
+                <td class="text-zinc-500">Feb 22</td>
+                <td><button class="text-empire-500 hover:text-empire-400 text-xs">View</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Decision History -->
+        <div class="card rounded-lg p-4">
+          <h3 class="font-semibold mb-4">Recent Decisions</h3>
+          <div class="space-y-2">
+            <div class="flex items-center gap-3 p-3 bg-zinc-800/50 rounded text-sm">
+              <span class="text-green-500">✓</span>
+              <span>Published blog post "10 Tips for Digital Creators"</span>
+              <span class="ml-auto text-xs text-zinc-500">2h ago • Auto-approved (L2)</span>
+              <button class="text-xs text-zinc-500 hover:text-red-400">Rollback</button>
+            </div>
+            <div class="flex items-center gap-3 p-3 bg-zinc-800/50 rounded text-sm">
+              <span class="text-green-500">✓</span>
+              <span>Scheduled 3 Twitter posts for tomorrow</span>
+              <span class="ml-auto text-xs text-zinc-500">5h ago • Approved by Owner</span>
+              <button class="text-xs text-zinc-500 hover:text-red-400">Rollback</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Activity Log -->
+      <div id="page-activity" class="page hidden p-6 space-y-6">
+        <div class="flex items-center justify-between">
+          <h2 class="text-2xl font-bold">Activity Log</h2>
+          <div class="flex gap-2">
+            <select class="bg-zinc-800 border border-zinc-700 rounded px-3 py-1.5 text-sm">
+              <option>All Levels</option>
+              <option>L1 - Critical Only</option>
+              <option>L2 - Important</option>
+              <option>L3 - Normal</option>
+            </select>
+            <select class="bg-zinc-800 border border-zinc-700 rounded px-3 py-1.5 text-sm">
+              <option>All Creators</option>
+              <option>Alex Digital</option>
+              <option>Sarah Growth</option>
+              <option>Mike Content</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="card rounded-lg divide-y divide-zinc-800">
+          <div class="p-4 flex items-start gap-4">
+            <span class="w-2 h-2 mt-2 rounded-full bg-red-500"></span>
+            <div class="flex-1">
+              <div class="font-medium">ROAS Alert Triggered</div>
+              <div class="text-sm text-zinc-500">Alex Digital • Growth Agent</div>
+              <div class="text-xs text-zinc-600 mt-1">ROAS dropped from 2.1 to 1.8, below 2.0 threshold</div>
+            </div>
+            <span class="text-xs text-zinc-500">5 min ago</span>
+            <span class="px-2 py-0.5 bg-red-900/50 text-red-400 rounded text-xs">L1</span>
+          </div>
+          <div class="p-4 flex items-start gap-4">
+            <span class="w-2 h-2 mt-2 rounded-full bg-yellow-500"></span>
+            <div class="flex-1">
+              <div class="font-medium">Ad Spend Limit Exceeded</div>
+              <div class="text-sm text-zinc-500">Sarah Growth • Growth Agent</div>
+              <div class="text-xs text-zinc-600 mt-1">Daily spend $11,500 exceeds $10,000 limit (+15%)</div>
+            </div>
+            <span class="text-xs text-zinc-500">23 min ago</span>
+            <span class="px-2 py-0.5 bg-yellow-900/50 text-yellow-400 rounded text-xs">L2</span>
+          </div>
+          <div class="p-4 flex items-start gap-4">
+            <span class="w-2 h-2 mt-2 rounded-full bg-green-500"></span>
+            <div class="flex-1">
+              <div class="font-medium">Content Published</div>
+              <div class="text-sm text-zinc-500">Alex Digital • Content Agent</div>
+              <div class="text-xs text-zinc-600 mt-1">Blog post "10 Tips for Digital Creators" published</div>
+            </div>
+            <span class="text-xs text-zinc-500">2h ago</span>
+            <span class="px-2 py-0.5 bg-zinc-700 text-zinc-300 rounded text-xs">L3</span>
+          </div>
+          <div class="p-4 flex items-start gap-4">
+            <span class="w-2 h-2 mt-2 rounded-full bg-green-500"></span>
+            <div class="flex-1">
+              <div class="font-medium">Decision Approved</div>
+              <div class="text-sm text-zinc-500">Alex Digital • Revenue Agent</div>
+              <div class="text-xs text-zinc-600 mt-1">Owner approved price increase from $197 to $247</div>
+            </div>
+            <span class="text-xs text-zinc-500">3h ago</span>
+            <span class="px-2 py-0.5 bg-zinc-700 text-zinc-300 rounded text-xs">L3</span>
+          </div>
+          <div class="p-4 flex items-start gap-4">
+            <span class="w-2 h-2 mt-2 rounded-full bg-zinc-600"></span>
+            <div class="flex-1">
+              <div class="font-medium">Metrics Synced</div>
+              <div class="text-sm text-zinc-500">System</div>
+              <div class="text-xs text-zinc-600 mt-1">Daily metrics sync completed for all creators</div>
+            </div>
+            <span class="text-xs text-zinc-500">6h ago</span>
+            <span class="px-2 py-0.5 bg-zinc-800 text-zinc-500 rounded text-xs">L4</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Execution Console -->
+      <div id="page-execution" class="page hidden p-6 space-y-6">
+        <div class="flex items-center justify-between">
+          <h2 class="text-2xl font-bold">Execution Console</h2>
+          <div class="flex gap-2">
+            <span class="px-3 py-1 bg-yellow-900/30 text-yellow-400 rounded text-sm">7 Pending Approvals</span>
+          </div>
+        </div>
+        
+        <!-- Approval Queue -->
+        <div class="card rounded-lg p-4">
+          <h3 class="font-semibold mb-4">Approval Queue</h3>
+          <div class="space-y-3">
+            <div class="bg-red-900/20 border border-red-800/50 p-4 rounded-lg">
+              <div class="flex items-start justify-between">
+                <div>
+                  <span class="px-2 py-0.5 bg-red-600 text-white rounded text-xs mr-2">CRITICAL</span>
+                  <span class="font-medium">Pause all ads due to ROAS drop</span>
+                  <div class="text-sm text-zinc-500 mt-1">Alex Digital • Growth Agent</div>
+                  <div class="text-xs text-zinc-600 mt-2">
+                    Rule triggered: ROAS_THRESHOLD_BREACH • Confidence: 94%
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button class="px-3 py-1.5 bg-green-600 hover:bg-green-500 rounded text-sm">Approve</button>
+                  <button class="px-3 py-1.5 bg-zinc-700 hover:bg-zinc-600 rounded text-sm">Reject</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-yellow-900/20 border border-yellow-800/50 p-4 rounded-lg">
+              <div class="flex items-start justify-between">
+                <div>
+                  <span class="px-2 py-0.5 bg-yellow-600 text-white rounded text-xs mr-2">HIGH</span>
+                  <span class="font-medium">Scale ad spend by 25%</span>
+                  <div class="text-sm text-zinc-500 mt-1">Sarah Growth • Growth Agent</div>
+                  <div class="text-xs text-zinc-600 mt-2">
+                    Projected impact: +$33,000/day spend → +$82,500/day revenue
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button class="px-3 py-1.5 bg-green-600 hover:bg-green-500 rounded text-sm">Approve</button>
+                  <button class="px-3 py-1.5 bg-zinc-700 hover:bg-zinc-600 rounded text-sm">Reject</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-zinc-800/50 border border-zinc-700 p-4 rounded-lg">
+              <div class="flex items-start justify-between">
+                <div>
+                  <span class="px-2 py-0.5 bg-zinc-600 text-white rounded text-xs mr-2">NORMAL</span>
+                  <span class="font-medium">Publish weekly newsletter</span>
+                  <div class="text-sm text-zinc-500 mt-1">Mike Content • Content Agent</div>
+                  <div class="text-xs text-zinc-600 mt-2">
+                    Ready to send to 45,230 subscribers
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button class="px-3 py-1.5 bg-green-600 hover:bg-green-500 rounded text-sm">Approve</button>
+                  <button class="px-3 py-1.5 bg-zinc-700 hover:bg-zinc-600 rounded text-sm">Reject</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Portfolio View -->
+      <div id="page-portfolio" class="page hidden p-6 space-y-6">
+        <h2 class="text-2xl font-bold">Portfolio Overview</h2>
+        
+        <div class="grid grid-cols-3 gap-4">
+          <div class="card p-6 rounded-lg">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-yellow-600 flex items-center justify-center font-bold">S</div>
+                <div>
+                  <div class="font-medium">Alex Digital</div>
+                  <div class="text-xs text-zinc-500">DigitalMastery</div>
+                </div>
+              </div>
+              <span class="w-2 h-2 rounded-full bg-green-500"></span>
+            </div>
+            <div class="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <div class="text-zinc-500">Revenue</div>
+                <div class="font-medium">$423,500</div>
+              </div>
+              <div>
+                <div class="text-zinc-500">ROAS</div>
+                <div class="font-medium text-yellow-400">1.8x</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card p-6 rounded-lg">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center font-bold">A</div>
+                <div>
+                  <div class="font-medium">Sarah Growth</div>
+                  <div class="text-xs text-zinc-500">GrowthHacker Pro</div>
+                </div>
+              </div>
+              <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+            </div>
+            <div class="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <div class="text-zinc-500">Revenue</div>
+                <div class="font-medium">$287,430</div>
+              </div>
+              <div>
+                <div class="text-zinc-500">ROAS</div>
+                <div class="font-medium">2.4x</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card p-6 rounded-lg">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-zinc-600 flex items-center justify-center font-bold">B</div>
+                <div>
+                  <div class="font-medium">Mike Content</div>
+                  <div class="text-xs text-zinc-500">ContentKing</div>
+                </div>
+              </div>
+              <span class="w-2 h-2 rounded-full bg-green-500"></span>
+            </div>
+            <div class="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <div class="text-zinc-500">Revenue</div>
+                <div class="font-medium">$136,300</div>
+              </div>
+              <div>
+                <div class="text-zinc-500">ROAS</div>
+                <div class="font-medium">3.1x</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- War Room -->
+      <div id="page-warroom" class="page hidden p-6 space-y-6">
+        <div class="flex items-center justify-between">
+          <h2 class="text-2xl font-bold text-red-400">🚨 War Room</h2>
+          <span class="px-3 py-1 bg-red-900/30 text-red-400 rounded text-sm animate-pulse">2 Active Incidents</span>
+        </div>
+        
+        <div class="card rounded-lg p-4 border-red-800/50 bg-red-900/10">
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <h3 class="font-semibold text-red-400">Alex Digital: ROAS Crisis</h3>
+              <div class="text-sm text-zinc-500">Started 35 min ago • Growth cluster affected</div>
+            </div>
+            <button class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded">Emergency Freeze</button>
+          </div>
+          <div class="bg-zinc-900 rounded p-4 text-sm space-y-2">
+            <div><span class="text-zinc-500">Trigger:</span> ROAS dropped to 1.8 (threshold: 2.0)</div>
+            <div><span class="text-zinc-500">Daily Spend:</span> $44,000 → $33,000 recommended</div>
+            <div><span class="text-zinc-500">Projected Loss:</span> $8,800/day if no action</div>
+            <div><span class="text-zinc-500">Agent Recommendation:</span> Pause underperforming campaigns, redistribute to winners</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  
+  <script>
+    // Simple navigation
+    document.querySelectorAll('[data-page]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const pageId = 'page-' + link.dataset.page;
+        
+        // Hide all pages
+        document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+        
+        // Show selected page
+        const target = document.getElementById(pageId);
+        if (target) {
+          target.classList.remove('hidden');
+        } else {
+          // Default to command center if page doesn't exist
+          document.getElementById('page-command').classList.remove('hidden');
+        }
+        
+        // Update sidebar active state
+        document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+        link.classList.add('active');
+        
+        // Toggle agent tree for Alex
+        if (link.dataset.page === 'creator-alex') {
+          document.getElementById('alex-agents').classList.toggle('hidden');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
